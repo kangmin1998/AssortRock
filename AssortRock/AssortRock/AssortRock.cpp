@@ -1,20 +1,96 @@
-﻿// AssortRock.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+﻿// 075_StaticEx.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 //
 
 #include <iostream>
 
+class Skill
+{
+
+};
+
+// 주체가 누구인가를 파악해라. => 누가 누구를 알아야 한다고 생각하는가?
+// 주체의 개수를 파악해라.
+
+class Monster
+{
+public:
+    // 일반 맴버변수는 객체당 개별적입니다.
+    int MonsterHp;
+
+public:
+    void Damage();
+};
+
+class Player
+{
+public:
+    Player()
+    {
+        // 플레이어는 결국 만들어진다.
+        // 대부분의 플레이어는 1개 만들어진다.
+        MainPlayer = this;
+    }
+
+    static Player* GetPlayer()
+    {
+        // this->PlayerHp
+        // static 함수안에서는 
+        // this가 없습니다.
+        // this가 없습니다. => 
+        return MainPlayer;
+    }
+
+    // 일반 맴버함수의 첫번째 인자.
+    void Damage(/*Player* const this*/)
+    {
+        // this->PlayerHp;
+        /*NewPlayer.*/
+    }
+
+public:
+    // 클래스가 아무리 많이 객체화 되어도
+    // static은 1개 만들어 집니다. 데이터 영역에
+    // static으로 값공유를 하거나.
+    // static인 객체를 만들고 
+    static Player* MainPlayer;
+
+    // 플레이어 
+    int PlayerHp;
+};
+
+class NPC
+{
+public:
+};
+
 int main()
 {
-    std::cout << "Hello World!\n";
+    // 컨텐츠를 만들면서 가장 많이 접하게 되는 상황은 다음과 같다.
+    // 총알 몬스터 플레이어 NPC 상점 건물 장애물
+
+    // 장애물이 몬스터를 알아야 해요.
+    // 컨텐츠 간의 객체들이 어떻게 관계를 맺어야 하는가? 
+
+    // 객체를 만들고
+    // 몬스터는 100마리
+    // 플레이어는 1마리라고 하겠습니다.
+    Monster NewMonster[100];
+    // 객체를 만들지 않으면 Hp도 안생기는 겁니다.
+    // NewMonster.MonsterHp;
+
+    Player::GetPlayer();
+
+    Player NewPlayer;
+    NewPlayer.Damage(/*&NewPlayer*/);
+
 }
 
-// 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
-// 프로그램 디버그: <F5> 키 또는 [디버그] > [디버깅 시작] 메뉴
+void Monster::Damage()
+{
+    // 플레이어의 Hp를 
+    Player::MainPlayer->PlayerHp;
+}
 
-// 시작을 위한 팁: 
-//   1. [솔루션 탐색기] 창을 사용하여 파일을 추가/관리합니다.
-//   2. [팀 탐색기] 창을 사용하여 소스 제어에 연결합니다.
-//   3. [출력] 창을 사용하여 빌드 출력 및 기타 메시지를 확인합니다.
-//   4. [오류 목록] 창을 사용하여 오류를 봅니다.
-//   5. [프로젝트] > [새 항목 추가]로 이동하여 새 코드 파일을 만들거나, [프로젝트] > [기존 항목 추가]로 이동하여 기존 코드 파일을 프로젝트에 추가합니다.
-//   6. 나중에 이 프로젝트를 다시 열려면 [파일] > [열기] > [프로젝트]로 이동하고 .sln 파일을 선택합니다.
+
+// Player
+Player* Player::MainPlayer = nullptr;
