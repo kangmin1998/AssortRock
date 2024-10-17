@@ -4,9 +4,6 @@
     <ClInclude Include="Actor.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="ActorVector.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="ConsoleEngine.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -22,12 +19,12 @@
     <ClInclude Include="Renderer.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="..\TetrisContents\Copyblock.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="ActorVector.cpp">
       <Filter>Object</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleEngine.cpp">
@@ -44,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\TetrisContents\Copyblock.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

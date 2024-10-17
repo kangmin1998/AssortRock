@@ -16,7 +16,7 @@ class UEngineFile
 {
 // 하드코딩 
 public:
-	UEngineFile();  
+	UEngineFile();
 	~UEngineFile();
 
 	inline void SetPath(const char* _Path)

@@ -11,9 +11,26 @@ void Block::BeginPlay()
 	Render->RenderImage.Create({ 1, 1 }, '@');
 }
 
+
 void Block::Tick()
 {
 	Super::Tick();
+	
+	FIntPoint BlockPos = GetActorLocation();
+	FIntPoint BoardSize = board->GetImageRenderer()->RenderImage.GetImageSize();
+
+	if (BlockPos.Y + 1 >= BoardSize.Y || GetImageRenderer()->RenderImage.GetPixel())
+	{
+		SetActorLocation({0,0});
+		board->GetImageRenderer()->RenderImage.Copy(BlockPos, GetImageRenderer()->RenderImage);
+	}
+	// void SetActorLocation(FIntPoint _Pos);
+
+	if (count > 3)
+	{
+		AddActorLocation(FIntPoint::DOWN);
+	}
+	count++;
 
 	int Value = _kbhit();
 	if (Value != 0)
@@ -45,4 +62,9 @@ void Block::Tick()
 	}
 
 
+}
+
+void Block::SetBoardPtr(Board* _board)
+{
+	board = _board;
 }

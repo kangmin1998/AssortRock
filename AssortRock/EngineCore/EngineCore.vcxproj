@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\TetrisContents\Copyblock.h" />
     <ClInclude Include="Actor.h" />
-    <ClInclude Include="ActorVector.h" />
     <ClInclude Include="ConsoleEngine.h" />
     <ClInclude Include="ConsoleImage.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -28,8 +28,8 @@
     <ClInclude Include="Renderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\TetrisContents\Copyblock.cpp" />
     <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="ActorVector.cpp" />
     <ClCompile Include="ConsoleEngine.cpp" />
     <ClCompile Include="ConsoleImage.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
