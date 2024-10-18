@@ -43,11 +43,14 @@ public:
     }
 
     ~UList()
+        
+      
     {
-        while (true)
+
+        while ()
         {
 
-        delete DataType
+            
 
         }
 

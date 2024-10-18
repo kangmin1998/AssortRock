@@ -1,0 +1,98 @@
+std::	->	c++ 만든 표준위원회가 고인한 코드.
+
+stl		->	std 중에서 템플릿 쓴애들은 stl이라고 우리가 분류 했다. (템플릿) -> vector, map, list......
+
+스택의 크기 -> os가 1메가 크기 , 재귀 함수가 호출되면서 스택이 쌓이면서 넘치면 스택오버플로우
+
+While은 스택이 만들어졌다가 없어졌다가 반복하면서 끝나지만, 재귀함수는 스택이 계속 쌓이고 끝을 가야 끝낸다.
+
+- iterator은 순회하기 위해서 사용한다 -> 간단히 for문을 이용하여 만들 수 있다.
+
+ex) std::vector<int> Test; 
+	std::vector<int>::iterator StartIter = Test.begin();
+	std::vector<int>::iterator EndIter = Test. end();
+
+	for (; StartIter != EndIter; ++StartIter)
+	{
+		int Value = *StartIter;
+	}
+
+
+	map -> map에서 재귀를 많이 사용할것이다. 
+	재귀함수는 마지막에 리턴하는 순간에 재귀하는 함수는 꼬리 재귀이다.
+	 ㄴ 
+
+	ex) std::map<int> Test;
+		std::map<int>::iterator StartIter = Test.begin();
+		std::map<int>::iterator EndIter = Test. end(); 
+
+	for (; StartIter != EndIter; ++StartIter)
+	{
+		int Value = *StartIter;
+	}	
+	
+	- 트리의 종류
+	  ㄴ 모양에 따른 분류	-> 옥트리, 쿼드트리, 바이너리트리
+	  자식에 따른 분류	-> 서치트리, 레드블랙트리
+	  규칙에 때른 분류	-> 편향, 완전균형
+	  ㄴ 위의 분류는 혼합될 수 있다.
+
+
+	  - 옥트리 -> 3차원 지형을 표현할때.
+
+	  class octmapnode
+	  {
+	  public:
+		mapnode* parnet;
+		mapnode* childs[8];
+	  }
+
+	  - 쿼트트리 -> 2차원 지형을 표현할때.
+
+	  class quadmapnode
+	  {
+	  public:
+		mapnode* parnet;
+		mapnode* childs[4];
+	  }
+
+	  - 바이너리트리 
+
+	  class bimapnode
+	  {
+	  public:
+		mapnode* parnet;
+		// mapnode* childs[2];
+		// mapnode* rightchilds;
+		// mapnode* legtchilds;
+	  }
+
+
+	  - 완전 이진 트리
+	    ㄴ 자료가 들어갈때 자식을 왼쪽에서 오른쪽으로 순서대로 넣는다
+		         [1]
+			[2]	      [3]
+		 [4]   [5] [6]   [7]
+
+
+	  - 서치 트리
+		ㄴ 탐색을 용이하게 위한 트리.
+		ㄴ 작으면 왼쪽, 크면 오른쪽 -> 데이터를 분류하기 위해 
+		ex) 10(root) -> 2 -> -> 15 -> 17
+		         [10]
+			[2]	      [15]
+		 [0]   [0] [0]    [17]
+
+		ex) 17을 찾아보면
+		-vector은[10][2][15][17]
+		10 -> 2 -> 15 -> 17
+		-서치 탐색은 
+		10 -> 15 -> 17
+
+		- 바이너리 서치트리
+		  ㄴ 편향트리가 발생할수 있다. -> 편향트리를 막기위해서 자가균형 트리 알고리즘(레드블랙 이진트리알고리즘)
+		  ㄴ 회전이라는 함수를 실행하면 root가 바뀐다.
+	
+
+
+		
