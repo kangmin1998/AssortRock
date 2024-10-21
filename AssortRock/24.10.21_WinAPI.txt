@@ -87,7 +87,6 @@ void aaaaFuntion() {std::cout << "TEST" << std::endl;}
 							=> 코드를 작성할때 핸들(포인터)를 사용하는	것.
 							=> HINSTANCE => 윈도우가 인식하는 내 프로그램의 번호이다
 							=> 사용하면 번호를 0000이라 부르고 사용한다.
-							=> 
 	- 총 정리 :	os가 우리에게 번호(포인터)를 부여하고 그것을 핸들이라 한다. EX) 내프로그램 4151프로그램.
 				os가 자신의 진짜 메모리를 숨기고 내 프로그램을 관리하기 위해서이다.
 따라서
@@ -95,11 +94,11 @@ ATOM	MyRegisterClass(HINSTANCE hInstance);
 hInstance	->	DECLARE_HANDLE(HINSTANCE);
 -> #define DECLARE_HANDLE(name) struct name##__{int unused;}; typedef struct name##__ *name
 위의 내용은
-//struct HINSTANCE__ -> HINSTANCE__ 은 포인터를 가리킨다.
-//{ 
-//    int unused;  <- 
-//}; 
-//typedef struct HINSTANCE__* HINSTANCE;
+struct HINSTANCE__ -> HINSTANCE__ 은 포인터를 가리킨다.
+{ 
+    int unused;  <- 
+}; 
+typedef struct HINSTANCE__* HINSTANCE;
 
 
 
@@ -111,7 +110,7 @@ hInstance	->	DECLARE_HANDLE(HINSTANCE);
 		int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,			// 내 프로그램
 								_In_opt_ HINSTANCE hPrevInstance,	// 날 켠 프로그램의 핸들(배틀넷, 스토브, 스팀)
 								_In_ LPWSTR    lpCmdLine,			// 메인파라미터
-								_In_ int       nCmdShow)			// 
+								_In_ int       nCmdShow)			// 창을 화면에 어떻게 나타낼지를 결정
 	}
 	 - wWinMain 
 		ㄴ wWinMain으로 진입점을 바꿧는데 이걸 세팅하는 설정은 프로젝트에 있다.
@@ -257,16 +256,28 @@ EX) LoadStringW(hInstance, 103, szTitle, MAX_LOADSTRING); // 윈도우창의 위에 혹�
    char		aptr[10] = "aaa";
    wchar_t	wptr[10] = L"aaa";
 
-   strcpy_s()
-   wcscpy_s()
-   Lstrcpy_s()
- 
+    // 윈도우 클래스 ex W
+    WNDCLASSEXW wcexW;
+    wcexW.lpszClassName = L"test";
 
-  윈도우 클래스 ex W
-	WNDCLASSEXW wcexW;
-	wcexW.
-	WNDCLASSEXW wcexA;
-	wcexA.
+    WNDCLASSEXA wcexA;
+    wcexA.lpszClassName = "test";
+
+#ifdef UNICODE
+#else
+#endif // UNICODE
+
+    // 옛날 방식
+    // 문자열 선택을 하지 않는게 아니라 
+    // 자동으로 결정되게 된다.
+    // 중기까지의 방식
+    WNDCLASSEX Test;
+
+
+
+    // wcscpy_s()
+
+    // strcpy_s()
 
 
 
