@@ -1,0 +1,424 @@
+API란?
+- window를 사용하는데 도움이되는 집합 -> 어플리케이션 인터페이스(함수)
+- Lib, Dll라는 것으로 우리에게 배포된다. -> 베이스엔진으로 언리얼엔진을 보면 된다.
+
+- 배포
+	ㄴ빌드해서 빌드 결과물중 핵심결과물을 다른 사람들에게 공개한다.
+	ㄴ코드를 수정할 생각이 없으므로 배포로 공개한다.
+
+- 오픈소스
+	ㄴ 우리가 빌드할 수 있는 수준으로 IDE기준으로 공개한다.(모든 코드가 포함.)
+
+	ㄴ API는 일반적으로 배포로 공개된다. -> 결과물만 받아본다.
+
+	ㄴ x64폴더 -> Debug -> .obj은 중간파일이다.
+
+	ㄴ .cpp까지 다 공개했다.
+
+- .exe, .PDB, .LIB, .DLL -> 결과물 파일. (개발용으로 사용된다면 .h파일도 포함.)
+=> 프로젝트를 빌드하면 나오는 결과물 파일들이다.
+
+.EXE - OS에서 동작할 수 있는 실행파일
+	ㄴ 코드영역을 구성하는 내용들.
+	ㄴ 메모리 구성, 함수내용
+	ㄴ 어떤 창을 열고 어떻게 프로세스로서 os에 등록 되어야한다. => 작업관리자를 열면 .exe파일이 올라면서 실행.
+
+
+.LIB - .exe와 합쳐지는 코드 결과물 , 실행 파일은 아니지만 실행파일과 같은 결과물이다. ()
+	ㄴ 코드영역을 구성하는 내용들.
+	ㄴ 메모리 구성, 함수내용          <= 여기까지가 실행된것을 Lib라고한다.
+	ㄴ exe파일 안에 구성원으로 있다. => BaseSystem.lib , EngineBase.lib , EngineCore.lib
+	ㄴ cpp내용이 다 빌드되서 나와있다. -> .exe수준으로 빌드가 된 결과물이다 (완전이 2진파일로 나왔다.)
+	ㄴ #pragma comment (lib, "BaseSystem.lib")	<- 1번만 치면 "BaseSystem.lib"을 사용하겠다고 명시했기 때문에 여러번 칠 필요가 없다.
+	ㄴ 정적 라이브러리(코드가 프로그램에 포함됨) 또는 동적 라이브러리와 연결하는 데 사용되는 파일.
+
+
+.DLL - 필요할 떄만 연결할 수 있는 빌드 결과 파일
+	ㄴ .exe가 실핼되면 Ram에 올라가서 프로세스(코드, 데이터, 힙, 스택)가 되면 os가 관리하면서 dll을 포함하게되며 필요할 때 사용한다.
+	ㄴ 메모리 관련 문제로 .dll을 사용해야 됬다. -> .lib에 비해 사용법이 더 복잡하다.
+	ㄴ 실행 시 동적으로 로드되는 외부 라이브러리 파일.
+
+- .DLL, .LIB의 차이
+	ㄴ 이해하기 쉽게 설명하면, .dll은 외부에서 제공하는 기능을 '빌려 쓰는' 것이라면,
+	ㄴ .lib는 그 기능을 미리 '프로그램 안에 넣어두는' 방식이라고 볼 수 있습니다.
+
+
+.PDB  - 디버깅용 네임맹글링 정보를 기록해 놓은 파일. (용량이 크다.)
+	ㄴ .PDB는 빌드 과정에서 병형과정에 대한 이름 변경을 기록해 놓은 파일이다.
+	ㄴ 파일은 프로그램의 디버깅에 필요한 정보(변수, 함수 이름, 소스 코드 위치 등)를 저장하는 파일입니다.
+	ㄴ 배포된 프로그램에는 포함되지 않는 경우가 많으며, 주로 개발 환경에서 사용됩니다.
+	ㄴ Unreal은 PDB파일을 받아야 디버깅이 된다.
+	ㄴ 유저한테는 용량만 늘어날 뿐 배포하지 않는다.
+
+- 네임맹글링 
+  컴파일러 -> 어셈블러
+	ㄴ컴파일러에서 어셈블러로 갈때 네임맹글링이 일어난다.
+  어셈블러 -> 링커
+	ㄴ  컴파일된 코드가 실행 가능한 프로그램으로 변환되는 중요한 단계입니다.
+
+
+
+Win Api 새프로젝트 만들기
+- windows 데스크톱 어플리케이션 => 안에 문법들을 이해할 수 있느냐?.... 어떤 자료구조 이용?.... 엔진안에 구조파악?.... 
+								 (엔진 구조가 어디까지 알아야하는지 조율하는 것이 중요하다.)
+	ㄴ 윈도우가 우리에게 제공하는 윈도우에서 c++로 프로그램을 만드는것.
+
+※ 안에 구조를 보면
+
+- char, wchar
+char	->	1바이트로 문자 처리하는 자료형
+wchar	->	2바이트로 문자 처리하는 자료형 (L"sdsdds")
+
+
+- #define에서 ##
+#define MacroFunction(Name) void Name## Funtion() {std::cout << "TEST" << std::endl;}
+MacroFunction(aaaa);
+void aaaaFuntion() {std::cout << "TEST" << std::endl;}
+
+ - 핸들방식
+	ㄴ 윈도우가 우리에게 주는 핸들 핸들방식 다시한번 설명하자면.
+	ㄴ 핸들방식 다시한번 설명하자면 OS가 관리하는 Ram과 CPU의 영역을 커널 영역이라고 합니다.
+	ㄴ 결국 ram 입니다. OS입장에서 이 영역은 들어가거나 위치가 들켜도 안되. OS가 관리합니다.
+	ㄴ 우리에게 키를 줍니다. -> 포인터인데 주소값이 4자리수 이하 깔금한 정수가 보입니다.
+	ㄴ 0x0000000000280fda => 이 키를 줘야한 window가 우리를 알아봅니다.
+	ㄴ 이 핸들들은 어떤 개념들을 대표합니다.
+	ㄴ 핸들방식 (HINSTANCE)	=> 내 프로그램을 대표합니다.
+							=> 윈도우가 우리에게 포인터 하나를 내려준다.
+							=> 코드를 작성할때 핸들(포인터)를 사용하는	것.
+							=> HINSTANCE => 윈도우가 인식하는 내 프로그램의 번호이다
+							=> 사용하면 번호를 0000이라 부르고 사용한다.
+							=> 
+	- 총 정리 :	os가 우리에게 번호(포인터)를 부여하고 그것을 핸들이라 한다. EX) 내프로그램 4151프로그램.
+				os가 자신의 진짜 메모리를 숨기고 내 프로그램을 관리하기 위해서이다.
+따라서
+ATOM	MyRegisterClass(HINSTANCE hInstance);
+hInstance	->	DECLARE_HANDLE(HINSTANCE);
+-> #define DECLARE_HANDLE(name) struct name##__{int unused;}; typedef struct name##__ *name
+위의 내용은
+//struct HINSTANCE__ -> HINSTANCE__ 은 포인터를 가리킨다.
+//{ 
+//    int unused;  <- 
+//}; 
+//typedef struct HINSTANCE__* HINSTANCE;
+
+
+
+ - mainparameter
+	ㄴ 모든 프로그램은 기본적으로 진입점이 있다.
+	ㄴ 그 진입점은 언제나 2개의 인자를 배치할 수 있다.
+
+	{
+		int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,			// 내 프로그램
+								_In_opt_ HINSTANCE hPrevInstance,	// 날 켠 프로그램의 핸들(배틀넷, 스토브, 스팀)
+								_In_ LPWSTR    lpCmdLine,			// 메인파라미터
+								_In_ int       nCmdShow)			// 
+	}
+	 - wWinMain 
+		ㄴ wWinMain으로 진입점을 바꿧는데 이걸 세팅하는 설정은 프로젝트에 있다.
+		ㄴ 하위 시스템을 다른 걸로 바꾸면 에러가 난다.
+	EX)
+	{
+		int main(int_Count, const char** _MainName)
+		{
+			// char** _MainName 메인 파라미터
+			// int_Count 메인 파라미터의 인자 갯수
+
+
+			for(size_t i = 0;, i < count; i++)
+			{
+				const char* ptr = _MainName[i];
+				std::cout << _MainName[i] << std::endl;
+				
+			}
+
+			// if(2 "Clone == _MainName[2]")  git clone 을 사용할 때
+			
+		}
+	}
+
+
+	 - .RC
+		ㄴ	이 EXE파일이 존재할 때 폴더에 .RC파일이 같이 존재하면 윈도우가 자동으로 로드해준다.
+			여기서 중요한건 이미지만 리소스가 아닙니다. 문자열 상수 아이콘 사운드 등등 포함.
+		ㄴ	.RC파일로 변경이 가능한 대표적인 예는 icon입니다.
+			대부분 window가 동적방식과 정적방식을 만들어 놓습니다.
+
+
+	{
+		UNREFERENCED_PARAMETER(hPrevInstance);
+		UNREFERENCED_PARAMETER(lpCmdLine);
+		위 내용은 결국 -> 	(hPrevInstance);	// 어떤 메모리영역에 ()을 하면 컴파일러가 사용한걸로 인식합니다.
+							(lpCmdLine);
+	-> 경고 등급이 높으면 함수의 인자가 전달되었는데 사용을 안하면 오류가 난다.
+	}
+
+
+
+	{
+	 윈도우의 기본 리소스 로딩방식을 이해해야 한다.
+	LoadStringW(hInstance, IDS_APP_TITLE /*쓰고싶은 파일 숫자(103)*/, szTitle, MAX_LOADSTRING);
+EX) LoadStringW(hInstance, 103, szTitle, MAX_LOADSTRING); // 윈도우창의 위에 혹은 작업표시줄의 아이콘 변경
+
+	// 리소스 파일 -> String Table
+    // ID							값		캡션 
+    // IDS_APP_TITLE				103		WindowsProjectstart
+    // IDC_WINDOWSPROJECTSTART		109		WINDOWSPROJECTSTART
+
+    LoadStringW(hInstance, IDC_WINDOWSPROJECTSTART, szWindowClass, MAX_LOADSTRING);
+	ㄴ hInstance에 프로그램에서 제가 .rc파일로 로드한 텍스트가 있으면 가져다가 쓸 수 있다.
+	}
+   
+
+   {
+   ★★★ MyRegisterClass(hInstance); -> window 스타일 등록
+		ㄴ window창을 띄우려면 window창이 사용하는 아이콘이나 커서 혹은 여러가지 것들을
+		   윈도우에서 
+		ㄴ 윈도우의 스타일을 하나를 등록시키는 함수 인자가 많을수밖에 없는데
+		   구조체를 만들어서 넣어주는 스타일로 만든다.
+   
+
+   ATOM MyRegisterClass(HINSTANCE hInstance) 
+	ㄴ 윈도우의 스타일 하나 등록시키는 함수 인자가 많을수 밖에 없는데 구조체를 만들어서 넣어주는 스타일로 만든다.
+	ㄴ 앞으로 이런 스타일로 띄어줘야 해요.
+	}
+
+
+
+{
+    WNDCLASSEXW wcex;
+
+    //사이즈 넣어줘야한다.
+    wcex.cbSize = sizeof(WNDCLASSEX);
+
+    // 이 윈도우 스타일을 등록시킨
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+
+	// 무슨 일이 생기면 어떻게 할꺼야?
+	// 객체 방식 => 제외 (다향성 -> 가상함수virtual)
+
+	// 함수 포인터 => 특정 함수 포인터를 넣어준다.
+    wcex.lpfnWndProc    = WndProc;
+
+    wcex.cbClsExtra     = 0;
+    wcex.cbWndExtra     = 0;
+
+	// 이 윈도우스타일을 등록시킨 프로그램 번호.
+    wcex.hInstance      = hInstance; 
+    wcex.hInstance      = hInstance; 
+
+    // .RC파일에 등록된 리드하는 디파인. nullptr을 넣어주면 기본아이콘.
+    // wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSPROJECTSTART));
+	wcex.hIcon          = nullptr;
+    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1); // 색상
+
+    //wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_WINDOWSPROJECTSTART); // 메뉴
+    wcex.lpszMenuName   = nullptr; // 메뉴 창을 없애자 -> 요즘은 메뉴있는 게임이 없다.
+
+    wcex.lpszClassName  = szWindowClass;
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
+    return RegisterClassExW(&wcex);
+}
+
+#define WS_OVERLAPPEDWINDOW (WS_OVERLAPPED     | \
+                             WS_CAPTION        | \
+                             WS_SYSMENU        | \
+                             WS_THICKFRAME     | \
+                             WS_MINIMIZEBOX    | \
+                             WS_MAXIMIZEBOX)
+
+   // bool IsTitle = false; <- 이 방식이 편하지만....
+
+   // int Value = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+   int Value = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX;
+
+   // 윈도우의 핸들
+   HWND hWnd = CreateWindowW(L"MY080WINDOWSPROJECTSTART", L"타이틀", Value,
+            CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+
+   //HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   //   CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+
+
+
+   --------------------------------------------------------
+   string charEX
+
+   함수 이름앞이나 끝에 w를 붙여서 자기가 wchar_t 문자열 함수라는것을 표현한다.
+   앞으로 어떤 함수를 봤는데 마지막에 이유없이 A W가
+   앞이나 뒤에 W가 붙었다면 그 함수는 wchar_t* ptr;
+   앞이나 뒤에 A가 붙었다면 그 함수는 char* ptr;
+
+
+
+
+
+   char		aptr[10] = "aaa";
+   wchar_t	wptr[10] = L"aaa";
+
+   strcpy_s()
+   wcscpy_s()
+   Lstrcpy_s()
+ 
+
+  윈도우 클래스 ex W
+	WNDCLASSEXW wcexW;
+	wcexW.
+	WNDCLASSEXW wcexA;
+	wcexA.
+
+
+
+	---------------------------------------------------------------------------
+	 -> #define은 비쥬얼스튜디오에서 정해줄 수 있다.
+	 -> 혹은 특정 옵션은 설정에 따라 자동으로 내부에 코드를 삽입한다.
+프로젝트 속성 => 문자집합 => 유니코드를 하면 
+	ㄴ #define _UNICODE => 자동 삽입 된다.
+	ㄴ #ifdef _UNICODE
+
+#ifdef _UNICODE
+	ㄴ TTT가 존재한다면
+	ㄴ 전처리기가 이 안의 코드를 넣는다.
+#define MYTEXT(VALUE) L##VALUE
+#define MYPRINTFS(VALUE) wprintf_s(VALUE)
+int AW;
+
+#else
+int AA;
+	ㄴ TTT가 존재하지 않는다면
+	ㄴ 전처리기가 이 안의 코드를 넣는다.
+
+#define MYTEXT(VALUE) VALUE
+#define MYPRINTFS(VALUE) printf_s(VALUE)
+#endif
+
+
+
+#define 은 TTT가 존재한다. 치환 말고도
+1. TTT는 AAAA다 첫번째 의미
+2. TTT라는 define이 존재한다.
+
+#define TTT AAAA
+
+#ifdef TTT
+TTT가 존재한다면
+전처리기가 이 안의 코드를 넣는다.
+int A;
+#else
+TTT가 존재하지 않는다면
+전처리기가 이 안의 코드를 넣는다.
+int B;
+#endif
+
+
+
+
+	멀티 바이트 , 
+	유니코드 문자 집합
+
+
+
+
+
+
+	멀티바이트, 유니코드 문자집합 옵션을 사용안하고,
+	-> 최근에는 " " 으로만 사용하고 멀티바이트이다.
+	 최신 라이브러리들이 char*요구하기 떄문에 입니다.
+	 UTF계열 인코딩이 char 표현됩니다.
+	 UTF 시리즈는 1~4바이트로 글자를 표현하는 문자 체계입니다. (char로 사용 홀수)
+	 -> 그러므로 wchar(2바이트)은 사용불가.
+
+	멀티바이트를 UTF파일로 변경. -> multitoUTF8
+
+
+	-----------------------------------------------------------------------------------
+	- Endian
+
+	int main()
+{
+	//  00000000 00000000 00000000 00000001   4바이트
+	int value = 1;
+
+	//	Arr[0]	 Arr[1]	  Arr[2]   Arr[3]
+	//	100		 101	  102	   103
+	//  00000000 00000000 00000000 00000001   4바이트
+	char Arr[4] = {0};
+	int* TestValuePtr = reinterpret_cast<int*>(Arr);
+	*TestValuePtr = value;
+
+	// 위의 내용에
+	// 인텔CPU를 가진 컴퓨터에서 만든 데이터를 AMD CPU에 보내면 값이 이상해진다.
+	// CPU가 빅에디안 리틀에디안을 쓰는지를 알아야 할 떄가 있다.
+
+}
+
+----------------------------------------------------------------------------------------
+
+   // 아래쪽은 나중에 볼겁니다.
+
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY080WINDOWSPROJECTSTART));
+
+    MSG msg;
+
+    // 기본 메시지 루프입니다:
+    // 윈도우 창은 여러개 띄울수 있으므로 윈도우 프로그램이 자신의 프로그램이라고 착각하면 안된다.
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        // window에 일이 생기거나 내 프로그램이 무언가를 실행해야 한다.
+        // 중단점을 걸었는데 중단점이 걸리지 않는다면 내 프로그램은 아무 일도 하지 않는다는 것을 뜻한다.
+        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) // -> 내 프로그램이 아무일도 하지 않는다. 프로그램이 실행됬다면 CPU가 돌아갑니다.
+        {                                                       // -> 아무일도 하지 않는다는 뜻은 윈도우 선택 윈도우 이동 윈도우 클릭 최소화 등등...
+                                                                // -> 게임은 아무일도 하지 않아도 계속해서 실행되면서 행동한다.
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    return (int) msg.wParam;
+
+
+	---------------------------------------------------------------------
+
+
+	// 함수 포인터로 넣어진예
+	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	ㄴ window야 내 window창에 무슨일이 생기면
+	ㄴ wndproc함수 실행시켜줘
+	ㄴ HWND hwmd        => 어떤 윈도우인지 알려줘
+	ㄴ UINT message     => 무슨 메세지 인지 알려줘 -> wm_windowMove
+	ㄴ WPARAM wParam    => 보조 데이터 Window위치 X
+	ㄴ LPARAM lParam    => 보조 데이터 Window위치 Y
+    switch (message)
+	{
+
+case WM_MOVE:
+    {
+        HDC DC = GetDC(hWnd);
+
+        Rectangle(DC, MOVE0, 50, MOVE1, 150);
+        ++MOVE0;
+        ++MOVE1;
+        DefWindowProc(hWnd, message, wParam, lParam);
+        break;
+    }
+    case WM_CREATE:
+    {
+        // DefWindowProc(hWnd, message, wParam, lParam);
+        break;
+    }
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        // 내가 처리하지 않으면 여기로 흘러간다.
+        // 디폴트 처리로 해줘.
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+
+
+===================================================================================================
+
+
