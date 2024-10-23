@@ -1,0 +1,5 @@
+- std::string
+
+
+//basic_string<char>
+std::string Text;
